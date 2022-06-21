@@ -78,6 +78,7 @@ class PySymInt(object):
         return f"PySymInt({self.expr})"
 
     def __int__(self):
+        print("??")
         return self.shape_env.evaluate_expr(self.expr)
 
     def __bool__(self):
@@ -168,7 +169,7 @@ class FakeSymbolicTensor(torch.Tensor):
 
 
 def create_symbolic_tensor(name, arg, shape_env):
-    sym_shapes = tuple([shape_env.create_symint(f"{name}_{idx}", val) for idx, val in enumerate(arg.sym_size())])
+    sym_shapes = tuple([shape_env.create_symint(f"{name}_{idx}", val) for idx, val in enumerate(arg.shape)])
     sym_strides = tuple([shape_env.create_symint(f"{name}_{idx}_stride", val) for idx, val in enumerate(arg.stride())])
     return FakeSymbolicTensor(sym_shapes, sym_strides, arg.dtype, arg.layout, arg.requires_grad, arg.device)
 
@@ -312,5 +313,12 @@ class TestPySymInt(TestCase):
         self.assertIsInstance(r.sym_size(0), CPP_SYMINT_CLASS)
 
 
+shape_env = ShapeEnv()
+x = create_symbolic_tensor("x", torch.randn(5, 4, 3), shape_env)
+print(torch.ops.aten.expand.SymInt(x, x.shape).shape)
+print(shape_env.guards)
+
+exit(0)
 if __name__ == '__main__':
+    # return torch.cat([x, x])
     run_tests()
