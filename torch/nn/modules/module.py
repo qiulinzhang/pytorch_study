@@ -1718,6 +1718,8 @@ class Module:
             yield elem
 
     def children(self) -> Iterator['Module']:
+        # 只会返回一级子模块，不会迭代地往深返回
+        # 而 named_modules 则会由浅迭代地往深返回多级子模块
         r"""Returns an iterator over immediate children modules.
 
         Yields:
@@ -1727,6 +1729,8 @@ class Module:
             yield module
 
     def named_children(self) -> Iterator[Tuple[str, 'Module']]:
+        # 只会返回一级子模块，不会迭代地往深返回
+        # 而 named_modules 则会由浅迭代地往深返回多级子模块
         r"""Returns an iterator over immediate children modules, yielding both
         the name of the module as well as the module itself.
 
@@ -1774,6 +1778,8 @@ class Module:
             yield module
 
     def named_modules(self, memo: Optional[Set['Module']] = None, prefix: str = '', remove_duplicate: bool = True):
+        # named_modules 则会由浅迭代地往深返回多级子模块
+        # 而named_childrend()只会返回一级子模块，不会迭代地往深返回
         r"""Returns an iterator over all modules in the network, yielding
         both the name of the module as well as the module itself.
 
