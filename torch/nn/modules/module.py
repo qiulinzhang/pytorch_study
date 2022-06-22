@@ -1778,7 +1778,7 @@ class Module:
             yield module
 
     def named_modules(self, memo: Optional[Set['Module']] = None, prefix: str = '', remove_duplicate: bool = True):
-        # named_modules 则会由浅迭代地往深返回多级子模块
+        # named_modules 会由浅迭代地往深返回多级子模块
         # 而named_childrend()只会返回一级子模块，不会迭代地往深返回
         r"""Returns an iterator over all modules in the network, yielding
         both the name of the module as well as the module itself.
